@@ -7,36 +7,62 @@ import { VariantProps, tv } from "tailwind-variants";
 
 const select = tv({
   slots: {
-    root: "flex items-center",
-    trigger: "inline-flex items-center justify-center rounded-2xl font-extrabold",
+    root: "flex",
+    trigger: "inline-flex items-center rounded-2xl px-5 font-extrabold",
     content: "rounded-2xl font-extrabold",
   },
   variants: {
     variant: {
-      "outlined-white-row": {
-        root: "flex-row gap-6",
+      "outlined-white": {
+        root: "text-white",
         trigger: "ring-1 ring-white",
         content: "bg-coral-700",
       },
-      "filed-coral-row": {
-        root: "flex-row",
+      "outlined-light": {
+        root: "text-white",
+        trigger: "ring-1 ring-coral-500",
+        content: "bg-coral-700",
+      },
+      "filed-coral": {
+        root: "text-white",
         trigger: "bg-coral-700",
         content: "bg-coral-700",
       },
-      "filed-coral-300-row": {
-        root: "flex-row",
-        trigger: "bg-coral-500",
-        content: "bg-coral-500",
-      }
+      "filed-light-coral": {
+        root: "text-white",
+        trigger: "bg-coral-300",
+        content: "bg-coral-300",
+      },
     },
     size: {
-      xs: { trigger: "w-16 h-16 justify-center gap-2 p-1" },
-      lg: { trigger: "w-72 h-16 justify-center gap-2 p-2", content: 'w-72 p-2' },
+      xs: { trigger: "w-16 h-16 gap-2 p-1.5", content: "gap-2 p-1.5" },
+      sm: {
+        trigger: "w-52 h-16 gap-2 p-2",
+        content: "w-52 p-2",
+      },
+      lg: {
+        trigger: "w-72 h-16 gap-2 p-2",
+        content: "w-72 p-2",
+      },
+      xl: {
+        trigger: "w-96 h-16 gap-2 p-2",
+        content: "w-96 p-2",
+      },
+    },
+    flex: {
+      col: { root: "flex-col items-start gap-3.5" },
+      row: { root: "flex-row items-center" },
+    },
+    justifyTrigger: {
+      between: { trigger: "justify-between" },
+      center: { trigger: "justify-center" },
     },
   },
   defaultVariants: {
-    variant: "filed-coral-row",
+    variant: "filed-coral",
     size: "lg",
+    flex: "row",
+    justifyTrigger: "center",
   },
 });
 
@@ -52,9 +78,9 @@ interface SelectProps
 }
 
 export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
-  ({ id, label, placeholder, variant, size, children, ...props }, ref) => {
+  ({ id, label, placeholder, justifyTrigger, flex, variant, size, children, ...props }, ref) => {
     return (
-      <div className={root({ variant })}>
+      <div className={root({ flex, variant})}>
         {label && (
           <LabelPrimitive.Root htmlFor={id}>{label}</LabelPrimitive.Root>
         )}
@@ -62,11 +88,11 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
           <SelectPrimitive.Trigger
             id={id}
             ref={ref}
-            className={trigger({ variant, size })}
+            className={trigger({ variant, size, justifyTrigger })}
           >
             <SelectPrimitive.Value placeholder={placeholder} />
             <SelectPrimitive.Icon>
-              <ChevronDownIcon />
+              <ChevronDownIcon  />
             </SelectPrimitive.Icon>
           </SelectPrimitive.Trigger>
 
@@ -74,7 +100,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             <SelectPrimitive.Content
               position="popper"
               sideOffset={5}
-              className={content({ variant, size })}
+              className={content({ variant, size, })}
             >
               {children}
             </SelectPrimitive.Content>

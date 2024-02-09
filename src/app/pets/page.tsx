@@ -38,44 +38,84 @@ export default function Pets() {
 
   return (
     <main className="w-full h-screen flex flex-row bg-gray-50">
-      <section className="h-full flex flex-col gap-7 bg-coral-500">
+      <section className="h-full flex flex-col gap-7 bg-coral-700">
         <header className="px-14 pt-20">
           <Logo />
 
-          <section className="flex flex-row justify-between mt-6">
-            <div className="flex flex-row items-center gap-4">
-              <Select
-                placeholder="Estado"
-                defaultValue={selectState}
-                variant="outlined-white-row"
-                size="xs"
-                onValueChange={(e) => setSelectState(e)}
-              >
-                {stateOptions.map((state, index) => (
-                  <SelectItem key={index} value={state.name}>
-                    {state.name}
-                  </SelectItem>
-                ))}
-              </Select>
+          <div className="flex flex-row items-center justify-between gap-4 mt-6">
+            <Select
+              placeholder="Estado"
+              defaultValue={selectState}
+              variant="outlined-light"
+              size="xs"
+              onValueChange={(e) => setSelectState(e)}
+            >
+              {stateOptions.map((state, index) => (
+                <SelectItem key={index} value={state.name}>
+                  {state.name}
+                </SelectItem>
+              ))}
+            </Select>
 
-              <Select placeholder="Selecione uma Cidade" variant="filed-coral-row">
-                {selectCity.map((city, index) => (
-                  <SelectItem key={index} value={city.name}>
-                    {city.name}
-                  </SelectItem>
-                ))}
-              </Select>
+            <Select
+              placeholder="Selecione uma Cidade"
+              variant="outlined-light"
+              justifyTrigger="between"
+              size="sm"
+            >
+              {selectCity.map((city, index) => (
+                <SelectItem key={index} value={city.name}>
+                  {city.name}
+                </SelectItem>
+              ))}
+            </Select>
 
-              <Button icon={<SearchIcon />} className="h-14 w-14" />
-            </div>
-          </section>
+            <Button icon={<SearchIcon />} className="h-14 w-14" />
+          </div>
         </header>
 
-        <div className="h-full px-14 py-10 row-span-2 bg-coral-300">
+        <div className="h-full px-14 py-10 row-span-2 bg-coral-500">
           <p className="text-xl font-extrabold">Filtros</p>
 
-          <div className="w-full inline-flex items-center justify-center mt-6 gap-7">
-            <Select placeholder="Selecione a idade" variant="filed-coral-300-row">
+          <div className="w-full flex flex-col mt-6 gap-7">
+            <Select
+              placeholder="Selecione a idade"
+              label="Idade"
+              flex="col"
+              justifyTrigger="between"
+              size="xl"
+              variant="filed-light-coral"
+            >
+              <SelectItem value="Filhote">Filhote</SelectItem>
+            </Select>
+            <Select
+              placeholder="Selecione a idade"
+              label="Nível de Energia"
+              flex="col"
+              justifyTrigger="between"
+              size="xl"
+              variant="filed-light-coral"
+            >
+              <SelectItem value="Filhote">Filhote</SelectItem>
+            </Select>
+            <Select
+              placeholder="Selecione a idade"
+              label="Porte do animal"
+              flex="col"
+              justifyTrigger="between"
+              size="xl"
+              variant="filed-light-coral"
+            >
+              <SelectItem value="Filhote">Filhote</SelectItem>
+            </Select>
+            <Select
+              placeholder="Selecione a idade"
+              label="Nível de independência"
+              flex="col"
+              justifyTrigger="between"
+              size="xl"
+              variant="filed-light-coral"
+            >
               <SelectItem value="Filhote">Filhote</SelectItem>
             </Select>
           </div>
