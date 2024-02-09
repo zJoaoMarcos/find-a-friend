@@ -23,6 +23,11 @@ const select = tv({
         trigger: "bg-coral-700",
         content: "bg-coral-700",
       },
+      "filed-coral-300-row": {
+        root: "flex-row",
+        trigger: "bg-coral-500",
+        content: "bg-coral-500",
+      }
     },
     size: {
       xs: { trigger: "w-16 h-16 justify-center gap-2 p-1" },
