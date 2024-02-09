@@ -30,7 +30,7 @@ const select = tv({
       },
       "filed-white-coral": {
         root: "text-white",
-        trigger: "bg-coral-100 text-navy-900",
+        trigger: "bg-coral-100 text-navy-900 font-normal",
         content: "bg-coral-100/90 text-navy-900",
       },
       "filed-light-coral": {

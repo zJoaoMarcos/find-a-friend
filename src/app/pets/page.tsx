@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/Button";
 import { Logo } from "@/components/Logo";
+import { PetCard } from "@/components/PetCard";
 import { SearchIcon } from "@/components/SearchIcon";
 import { Select, SelectItem } from "@/components/Select";
 import React from "react";
@@ -132,6 +133,12 @@ export default function Pets() {
               </SelectItem>
             </Select>
           </header>
+
+          <div className="grid grid-cols-3 gap-2 ">
+            <PetCard />
+            <PetCard />
+            <PetCard />
+          </div>
         </div>
       </section>
     </main>
