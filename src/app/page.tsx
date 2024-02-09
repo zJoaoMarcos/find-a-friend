@@ -60,7 +60,7 @@ export default function Home() {
             placeholder="Estado"
             label="Busque um amigo:"
             defaultValue={selectState}
-            variant="outlined-white-row"
+            variant="outlined-white"
             size="xs"
             onValueChange={(e) => setSelectState(e)}
           >

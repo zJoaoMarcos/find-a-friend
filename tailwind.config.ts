@@ -16,10 +16,11 @@ const config: Config = {
       black: "#121214",
       white: "#FFFFFF",
       "gray-50": "#FDECED",
+      "coral-100": "#FBE1E2",
       "coral-300": "#F75F64",
       "coral-500": "#F15156",
       "coral-700": "#E44449",
-      "navy-900:": "#0D3B66",
+      "navy-900": "#0D3B66",
       "mustard-400": "#F4D35E",
     }
   },

@@ -121,7 +121,19 @@ export default function Pets() {
           </div>
         </div>
       </section>
-      <section className="w-1/2 h-1/2 flex items-center justify-center"></section>
+      <section className="w-full h-full flex flex-col  text-navy-900">
+        <div className="w-full pl-8 pr-28 mt-36">
+          <header className="flex flex-row items-center justify-between">
+            <p>Encontre  <span className="font-extrabold">324 amigos</span> na sua cidade</p>
+
+            <Select placeholder="Filtro" size="sm" justifyTrigger="between" variant="filed-white-coral">
+              <SelectItem value="Gatos e Cachorros">
+                Gatos e Cachorros
+              </SelectItem>
+            </Select>
+          </header>
+        </div>
+      </section>
     </main>
   );
 }

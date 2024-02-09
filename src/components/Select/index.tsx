@@ -28,6 +28,11 @@ const select = tv({
         trigger: "bg-coral-700",
         content: "bg-coral-700",
       },
+      "filed-white-coral": {
+        root: "text-white",
+        trigger: "bg-coral-100 text-navy-900",
+        content: "bg-coral-100/90 text-navy-900",
+      },
       "filed-light-coral": {
         root: "text-white",
         trigger: "bg-coral-300",
@@ -37,8 +42,8 @@ const select = tv({
     size: {
       xs: { trigger: "w-16 h-16 gap-2 p-1.5", content: "gap-2 p-1.5" },
       sm: {
-        trigger: "w-52 h-16 gap-2 p-2",
-        content: "w-52 p-2",
+        trigger: "w-52 h-14 gap-2 ",
+        content: "w-52 p-1.5",
       },
       lg: {
         trigger: "w-72 h-16 gap-2 p-2",
@@ -51,7 +56,7 @@ const select = tv({
     },
     flex: {
       col: { root: "flex-col items-start gap-3.5" },
-      row: { root: "flex-row items-center" },
+      row: { root: "flex-row items-center gap-6" },
     },
     justifyTrigger: {
       between: { trigger: "justify-between" },
