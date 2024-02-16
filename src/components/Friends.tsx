@@ -1,8 +1,15 @@
-export function Friends() {
+interface FriendsProps { 
+  width?: string;
+  height?: string;
+}
+
+export function Friends(props: FriendsProps) {
+  const { width= "592" ,height = "305" } = props
+
   return (
     <svg
-      width="592"
-      height="305"
+      width={width}
+      height={height}
       viewBox="0 0 592 305"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

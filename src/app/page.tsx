@@ -38,7 +38,7 @@ export default function Home() {
   }, [selectState]);
 
   return (
-    <main className="w-full h-screen p-36 flex flex-col bg-coral-500">
+    <main className="w-full h-screen p-36 flex flex-col bg-coral-500 text-white">
       <header className="w-full">
         <LogoWithText />
       </header>

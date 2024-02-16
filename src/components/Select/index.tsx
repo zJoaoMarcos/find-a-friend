@@ -16,17 +16,17 @@ const select = tv({
       "outlined-white": {
         root: "text-white",
         trigger: "ring-1 ring-white",
-        content: "bg-coral-700",
+        content: "bg-coral-700 text-white",
       },
       "outlined-light": {
         root: "text-white",
         trigger: "ring-1 ring-coral-500",
-        content: "bg-coral-700",
+        content: "bg-coral-700 text-white",
       },
       "filed-coral": {
         root: "text-white",
         trigger: "bg-coral-700",
-        content: "bg-coral-700",
+        content: "bg-coral-700 text-white",
       },
       "filed-white-coral": {
         root: "text-white",
@@ -36,7 +36,7 @@ const select = tv({
       "filed-light-coral": {
         root: "text-white",
         trigger: "bg-coral-300",
-        content: "bg-coral-300",
+        content: "bg-coral-300 text-white",
       },
     },
     size: {
