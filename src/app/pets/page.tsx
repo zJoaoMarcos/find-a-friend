@@ -22,6 +22,13 @@ const stateOptions = [
   },
 ];
 const citiesOptions = stateOptions.flatMap((state) => state.cities.map((city) => city));
+const pets = [
+  { id: 1, name: "Alfredo", photo: "alfredo.png" },
+  { id: 2, name: "Francis", photo: "francis.png" },
+  { id: 3, name: "Jameson", photo: "jameson.png" },
+  { id: 4, name: "Lauren", photo: "lauren.png" },
+  { id: 4, name: "Panqueca", photo: "panqueca.png" },
+];
 
 export default function Pets() {
   const [selectState, setSelectState] = React.useState<string>(stateOptions[0].name);
@@ -39,7 +46,7 @@ export default function Pets() {
 
   return (
     <main className="w-full h-screen flex flex-row bg-gray-50">
-      <section className="h-full flex flex-col gap-7 bg-coral-700">
+      <section className="h-full flex flex-col gap-7 bg-coral-700 text-white">
         <header className="px-14 pt-20">
           <Logo />
 
@@ -122,22 +129,31 @@ export default function Pets() {
           </div>
         </div>
       </section>
-      <section className="w-full h-full flex flex-col  text-navy-900">
-        <div className="w-full pl-8 pr-28 mt-36">
-          <header className="flex flex-row items-center justify-between">
-            <p>Encontre  <span className="font-extrabold">324 amigos</span> na sua cidade</p>
 
-            <Select placeholder="Filtro" size="sm" justifyTrigger="between" variant="filed-white-coral">
+      <section className="w-full h-full flex-col text-navy-900">
+        <div className="w-full pl-10 pr-28 mt-36">
+          <header className="flex flex-row items-center justify-between">
+            <p>
+              Encontre <span className="font-extrabold">324 amigos</span> na sua
+              cidade
+            </p>
+
+            <Select
+              placeholder="Filtro"
+              size="sm"
+              justifyTrigger="between"
+              variant="filed-white-coral"
+            >
               <SelectItem value="Gatos e Cachorros">
                 Gatos e Cachorros
               </SelectItem>
             </Select>
           </header>
 
-          <div className="grid grid-cols-3 gap-2 ">
-            <PetCard />
-            <PetCard />
-            <PetCard />
+          <div className="grid grid-cols-3 gap-8 mt-12">
+            {pets.map((pet) => (
+              <PetCard key={pet.id} photo={pet.photo} name={pet.name} />
+            ))}
           </div>
         </div>
       </section>
