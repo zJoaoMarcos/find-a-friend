@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import React from "react";
 import { ClassValue, VariantProps, tv } from "tailwind-variants";
 
 const buttonTv = tv({

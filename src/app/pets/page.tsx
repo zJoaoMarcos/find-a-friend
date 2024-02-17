@@ -78,7 +78,7 @@ export default function Pets() {
               ))}
             </Select>
 
-            <Button icon={<SearchIcon />} className="h-14 w-14" />
+            <Button Icon={<SearchIcon />}  classValue="h-14 w-14" />
           </div>
         </header>
 
