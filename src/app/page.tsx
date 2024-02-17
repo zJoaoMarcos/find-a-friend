@@ -5,7 +5,7 @@ import { Friends } from "@/components/Friends";
 import { LogoWithText } from "@/components/Logo/LogoWithText";
 import { SearchIcon } from "@/components/SearchIcon";
 import { Select, SelectItem } from "@/components/Select";
-import React from "react";
+import React, { useState } from "react";
 
 const stateOptions = [
   {
@@ -21,21 +21,24 @@ const stateOptions = [
     cities: [{ name: "Rio de Janeiro" }, { name: "Teresópolis " }],
   },
 ];
-const citiesOptions = stateOptions.flatMap((state) => state.cities.map((city) => city));
 
 export default function Home() {
-  const [selectState, setSelectState] = React.useState<string>(stateOptions[0].name);
-  const [selectCity, setSelectCity] = React.useState(citiesOptions);
+  const [selectedState, setSelectedState] = React.useState<string>(stateOptions[0].name);
+  const [stateCities, setStateCities] = React.useState(() =>
+    stateOptions
+    .filter((state) => state.name === selectedState)
+    .flatMap((state) => state.cities.map((city) => city))
+    );
+  const [selectedCity, setSelectedCity] = useState<string>('')
+    
+  function handleSelectState(stateSelected: string) {
+    const citiesFiltered = stateOptions
+      .filter((state) => state.name === stateSelected)
+      .flatMap((state) => state.cities.map((city) => city));
 
-  React.useEffect(() => {
-    if (selectState) {
-      const citiesFiltered = stateOptions
-        .filter((state) => state.name === selectState)
-        .flatMap((state) => state.cities.map((city) => city));
-
-      setSelectCity(citiesFiltered);
-    }
-  }, [selectState]);
+    setStateCities(citiesFiltered);
+    setSelectedState(stateSelected);
+  }
 
   return (
     <main className="w-full h-screen p-36 flex flex-col bg-coral-500 text-white">
@@ -59,10 +62,10 @@ export default function Home() {
           <Select
             placeholder="Estado"
             label="Busque um amigo:"
-            defaultValue={selectState}
+            defaultValue={selectedState}
             variant="outlined-white"
             size="xs"
-            onValueChange={(e) => setSelectState(e)}
+            onValueChange={(e) => handleSelectState(e)}
           >
             {stateOptions.map((state, index) => (
               <SelectItem key={index} value={state.name}>
@@ -71,9 +74,9 @@ export default function Home() {
             ))}
           </Select>
 
-          <Select placeholder="Selecione uma Cidade">
-            {selectCity.map((city, index) => (
-              <SelectItem key={index} value={city.name}>
+          <Select placeholder="Selecione uma Cidade" onValueChange={(city) => setSelectedCity(city)}>
+            {stateCities.map((city) => (
+              <SelectItem key={city.name} value={city.name}>
                 {city.name}
               </SelectItem>
             ))}
