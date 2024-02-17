@@ -1,3 +1,4 @@
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import { ClassValue, VariantProps, tv } from "tailwind-variants";
 
 const buttonTv = tv({
@@ -7,7 +8,7 @@ const buttonTv = tv({
   },
   variants: {
     color: {
-      'mustard': { button:"bg-[#F4D35E] hover:bg-mustard-400/90"}
+      'mustard': { button:"bg-mustard-400 hover:bg-mustard-400/90"}
     },
     size: {
       xs: { button: 'py-1 px-3 text-xs'},
@@ -22,23 +23,31 @@ const buttonTv = tv({
 
 const { button, icon } = buttonTv()
 
-interface ButtonProps extends VariantProps<typeof button> {
+type ButtonVariantProps = VariantProps<typeof buttonTv>;
+type NativeProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+interface ButtonProps extends Omit<NativeProps, keyof ButtonVariantProps>, ButtonVariantProps {
   text?: string;
-  icon?: React.ReactNode;
-  className?: ClassValue
-  iconPossition?: "right" | "left";
+  Icon?: React.ReactElement;
+  classValue?: ClassValue;
+  iconPosition?: "right" | "left";
 }
 
 export function Button(props: ButtonProps) {
+  const { Icon, iconPosition, classValue, ...rest} = props
+
   return (
-    <button className={button({ className: props.className })}>
-      {props?.iconPossition === "left" && props?.icon && (
-        <span className={icon()}>{props.icon}</span>
+    <button className={button({ className: classValue })} {...rest}>
+      {iconPosition === "left" && Icon && (
+        <span className={icon()}>{Icon}</span>
       )}
-      {!props.iconPossition && props?.icon && <span className={icon()}>{props.icon}</span>}
+
+      {!iconPosition && Icon && <span className={icon()}>{Icon}</span>}
+      
       {props?.text && props.text}
-      {props?.iconPossition === "right" && props?.icon && (
-        <span className={icon()}>{props.icon}</span>
+      
+      {iconPosition === "right" && Icon && (
+        <span className={icon()}>{Icon}</span>
       )}
     </button>
   );

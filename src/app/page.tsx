@@ -82,7 +82,7 @@ export default function Home() {
             ))}
           </Select>
 
-          <Button icon={<SearchIcon />} className="h-16 w-16" />
+          <Button Icon={<SearchIcon />} classValue="h-16 w-16"/>
         </div>
       </section>
     </main>
