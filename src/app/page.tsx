@@ -5,40 +5,21 @@ import { Friends } from "@/components/Friends";
 import { LogoWithText } from "@/components/Logo/LogoWithText";
 import { SearchIcon } from "@/components/SearchIcon";
 import { Select, SelectItem } from "@/components/Select";
-import React, { useState } from "react";
+import { getOrgsLocations } from "@/services/orgs";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
 
-const stateOptions = [
-  {
-    name: "SP",
-    cities: [
-      { name: "São Caetano do Sul" },
-      { name: "Santo André" },
-      { name: "São Paulo" },
-    ],
-  },
-  {
-    name: "RJ",
-    cities: [{ name: "Rio de Janeiro" }, { name: "Teresópolis " }],
-  },
-];
 
 export default function Home() {
-  const [selectedState, setSelectedState] = React.useState<string>(stateOptions[0].name);
-  const [stateCities, setStateCities] = React.useState(() =>
-    stateOptions
-    .filter((state) => state.name === selectedState)
-    .flatMap((state) => state.cities.map((city) => city))
-    );
-  const [selectedCity, setSelectedCity] = useState<string>('')
-    
-  function handleSelectState(stateSelected: string) {
-    const citiesFiltered = stateOptions
-      .filter((state) => state.name === stateSelected)
-      .flatMap((state) => state.cities.map((city) => city));
+  const { data: orgsLocations, isLoading } = useQuery({
+    queryKey: ['org-locations'],
+    queryFn: getOrgsLocations
+  })
 
-    setStateCities(citiesFiltered);
-    setSelectedState(stateSelected);
-  }
+  const [selectedState, setSelectedState] = React.useState<string>(orgsLocations?.[0].name ?? 'SP');
+  
+  const cities = orgsLocations?.filter((state) => state.name === selectedState)
+    .flatMap((state) => state.cities.map((city) => city)) ?? []
 
   return (
     <main className="w-full h-screen p-36 flex flex-col bg-coral-500 text-white">
@@ -62,20 +43,20 @@ export default function Home() {
           <Select
             placeholder="Estado"
             label="Busque um amigo:"
-            defaultValue={selectedState}
+            value={selectedState}
             variant="outlined-white"
             size="xs"
-            onValueChange={(e) => handleSelectState(e)}
+            onValueChange={(e) => setSelectedState(e)}
           >
-            {stateOptions.map((state, index) => (
+            {orgsLocations && orgsLocations.map((state, index) => (
               <SelectItem key={index} value={state.name}>
                 {state.name}
               </SelectItem>
             ))}
           </Select>
 
-          <Select placeholder="Selecione uma Cidade" onValueChange={(city) => setSelectedCity(city)}>
-            {stateCities.map((city) => (
+          <Select placeholder="Selecione uma Cidade">
+            {cities.map((city) => (
               <SelectItem key={city.name} value={city.name}>
                 {city.name}
               </SelectItem>
