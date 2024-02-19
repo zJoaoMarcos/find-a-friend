@@ -5,23 +5,10 @@ import { Logo } from "@/components/Logo";
 import { PetCard } from "@/components/PetCard";
 import { SearchIcon } from "@/components/SearchIcon";
 import { Select, SelectItem } from "@/components/Select";
+import { getOrgsLocations } from "@/services/orgs";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-const stateOptions = [
-  {
-    name: "SP",
-    cities: [
-      { name: "São Caetano do Sul" },
-      { name: "Santo André" },
-      { name: "São Paulo" },
-    ],
-  },
-  {
-    name: "RJ",
-    cities: [{ name: "Rio de Janeiro" }, { name: "Teresópolis " }],
-  },
-];
-const citiesOptions = stateOptions.flatMap((state) => state.cities.map((city) => city));
 const pets = [
   { id: 1, name: "Alfredo", photo: "alfredo.png" },
   { id: 2, name: "Francis", photo: "francis.png" },
@@ -31,18 +18,15 @@ const pets = [
 ];
 
 export default function Pets() {
-  const [selectState, setSelectState] = React.useState<string>(stateOptions[0].name);
-  const [selectCity, setSelectCity] = React.useState(citiesOptions);
+  const { data: orgsLocations, isLoading } = useQuery({
+    queryKey: ['org-locations'],
+    queryFn: getOrgsLocations
+  })
 
-  React.useEffect(() => {
-    if (selectState) {
-      const citiesFiltered = stateOptions
-        .filter((state) => state.name === selectState)
-        .flatMap((state) => state.cities.map((city) => city));
-
-      setSelectCity(citiesFiltered);
-    }
-  }, [selectState]);
+  const [selectedState, setSelectedState] = React.useState<string>(orgsLocations?.[0].name ?? 'SP');
+  
+  const cities = orgsLocations?.filter((state) => state.name === selectedState)
+    .flatMap((state) => state.cities.map((city) => city)) ?? []
 
   return (
     <main className="w-full h-screen flex flex-row bg-gray-50">
@@ -53,12 +37,12 @@ export default function Pets() {
           <div className="flex flex-row items-center justify-between gap-4 mt-6">
             <Select
               placeholder="Estado"
-              defaultValue={selectState}
+              defaultValue={selectedState}
               variant="outlined-light"
               size="xs"
-              onValueChange={(e) => setSelectState(e)}
+              onValueChange={(e) => setSelectedState(e)}
             >
-              {stateOptions.map((state, index) => (
+              {orgsLocations && orgsLocations.map((state, index) => (
                 <SelectItem key={index} value={state.name}>
                   {state.name}
                 </SelectItem>
@@ -71,7 +55,7 @@ export default function Pets() {
               justifyTrigger="between"
               size="sm"
             >
-              {selectCity.map((city, index) => (
+              {cities.map((city, index) => (
                 <SelectItem key={index} value={city.name}>
                   {city.name}
                 </SelectItem>
