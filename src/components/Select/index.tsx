@@ -80,16 +80,18 @@ interface SelectProps
   id?: string;
   placeholder: string;
   children: React.ReactNode;
+  onChangeValue?: ((event: any) => void) | undefined;
 }
 
 export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
-  ({ id, label, placeholder, justifyTrigger, flex, variant, size, children, ...props }, ref) => {
+  ({ id, label, placeholder, onChangeValue, justifyTrigger, flex, variant, size, children, ...props }, ref) => {
+
     return (
       <div className={root({ flex, variant})}>
         {label && (
           <LabelPrimitive.Root htmlFor={id}>{label}</LabelPrimitive.Root>
         )}
-        <SelectPrimitive.Root {...props}>
+        <SelectPrimitive.Root {...props} onValueChange={(e) => onChangeValue && onChangeValue(e)}>
           <SelectPrimitive.Trigger
             id={id}
             ref={ref}
