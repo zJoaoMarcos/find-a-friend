@@ -1,17 +1,28 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query";
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import React from "react";
+
 import { Button } from "@/components/Button";
 import { Friends } from "@/components/Friends";
 import { LogoWithText } from "@/components/Logo/LogoWithText";
 import { SearchIcon } from "@/components/SearchIcon";
 import { Select, SelectItem } from "@/components/Select";
 import { getOrgsLocations } from "@/services/orgs";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { z } from 'zod';
+import { useRouter } from "next/navigation";
 
+const searchPetsByRegionSchema = z.object({
+  state: z.string(),
+  city: z.string()
+})
+
+type SearchPetsByRegionSchema = z.infer<typeof searchPetsByRegionSchema>
 
 export default function Home() {
-  const { data: orgsLocations, isLoading } = useQuery({
+  const { data: orgsLocations } = useQuery({
     queryKey: ['org-locations'],
     queryFn: getOrgsLocations
   })
@@ -20,6 +31,21 @@ export default function Home() {
   
   const cities = orgsLocations?.filter((state) => state.name === selectedState)
     .flatMap((state) => state.cities.map((city) => city)) ?? []
+
+  const { register, handleSubmit, setValue } = useForm<SearchPetsByRegionSchema>({ 
+    resolver: zodResolver(searchPetsByRegionSchema),
+    defaultValues: {
+      state: selectedState
+    }
+  })  
+
+  const router = useRouter()
+
+  function searchPetsByRegion(data: SearchPetsByRegionSchema) {
+    const { state, city } = data 
+    router.push(`/pets?state=${state}&city=${city}`)
+  }
+
 
   return (
     <main className="w-full h-screen p-36 flex flex-col bg-coral-500 text-white">
@@ -41,21 +67,32 @@ export default function Home() {
 
         <div className="flex flex-row items-center gap-4">
           <Select
+            {...register("state")}
             placeholder="Estado"
             label="Busque um amigo:"
             value={selectedState}
             variant="outlined-white"
             size="xs"
-            onValueChange={(e) => setSelectedState(e)}
+            onChangeValue={(value) => {
+              setValue("state", value);
+              setSelectedState(value);
+            }}
           >
-            {orgsLocations && orgsLocations.map((state, index) => (
-              <SelectItem key={index} value={state.name}>
-                {state.name}
-              </SelectItem>
-            ))}
+            {orgsLocations &&
+              orgsLocations.map((state, index) => (
+                <SelectItem key={index} value={state.name}>
+                  {state.name}
+                </SelectItem>
+              ))}
           </Select>
 
-          <Select placeholder="Selecione uma Cidade">
+          <Select
+            placeholder="Selecione uma Cidade"
+            name="city"
+            onChangeValue={(value) => {
+              setValue("city", value);
+            }}
+          >
             {cities.map((city) => (
               <SelectItem key={city.name} value={city.name}>
                 {city.name}
@@ -63,7 +100,12 @@ export default function Home() {
             ))}
           </Select>
 
-          <Button Icon={<SearchIcon />} classValue="h-16 w-16"/>
+          <Button
+            onClick={handleSubmit(searchPetsByRegion)}
+            type="submit"
+            Icon={<SearchIcon />}
+            classValue="h-16 w-16"
+          />
         </div>
       </section>
     </main>

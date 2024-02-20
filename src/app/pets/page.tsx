@@ -6,27 +6,52 @@ import { PetCard } from "@/components/PetCard";
 import { SearchIcon } from "@/components/SearchIcon";
 import { Select, SelectItem } from "@/components/Select";
 import { getOrgsLocations } from "@/services/orgs";
+import { getPets } from "@/services/pets";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { useParams, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-const pets = [
-  { id: 1, name: "Alfredo", photo: "alfredo.png" },
-  { id: 2, name: "Francis", photo: "francis.png" },
-  { id: 3, name: "Jameson", photo: "jameson.png" },
-  { id: 4, name: "Lauren", photo: "lauren.png" },
-  { id: 4, name: "Panqueca", photo: "panqueca.png" },
-];
+const searchPetsByRegionSchema = z.object({
+  state: z.string(),
+  city: z.string()
+})
+
+type SearchPetsByRegionSchema = z.infer<typeof searchPetsByRegionSchema>
+
 
 export default function Pets() {
-  const { data: orgsLocations, isLoading } = useQuery({
+ /*  const params = useParams<{ state: string; city: string }>()
+  const { state, city } = params */
+  const searchParams = useSearchParams()
+  const state = searchParams.get('state')
+  const city = searchParams.get('city')
+
+
+  const { data: orgsLocations } = useQuery({
     queryKey: ['org-locations'],
     queryFn: getOrgsLocations
+  })
+
+  const { data: pets } = useQuery({
+    queryKey: ['pets-'],
+    queryFn: () => getPets({ city, state})
   })
 
   const [selectedState, setSelectedState] = React.useState<string>(orgsLocations?.[0].name ?? 'SP');
   
   const cities = orgsLocations?.filter((state) => state.name === selectedState)
     .flatMap((state) => state.cities.map((city) => city)) ?? []
+
+    const { register, handleSubmit, setValue } = useForm<SearchPetsByRegionSchema>({ 
+      resolver: zodResolver(searchPetsByRegionSchema),
+      defaultValues: {
+        state: selectedState
+      }
+    })  
 
   return (
     <main className="w-full h-screen flex flex-row bg-gray-50">
@@ -135,7 +160,7 @@ export default function Pets() {
           </header>
 
           <div className="grid grid-cols-3 gap-8 mt-12">
-            {pets.map((pet) => (
+            {pets && pets.map((pet) => (
               <PetCard key={pet.id} photo={pet.photo} name={pet.name} />
             ))}
           </div>
