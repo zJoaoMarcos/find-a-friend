@@ -13,6 +13,8 @@ import { Select, SelectItem } from "@/components/Select";
 import { getOrgsLocations } from "@/services/orgs";
 import { z } from 'zod';
 import { useRouter } from "next/navigation";
+import { queryClient } from "@/services/queryClient";
+import { getPets } from "@/services/pets";
 
 const searchPetsByRegionSchema = z.object({
   state: z.string(),
@@ -22,16 +24,17 @@ const searchPetsByRegionSchema = z.object({
 type SearchPetsByRegionSchema = z.infer<typeof searchPetsByRegionSchema>
 
 export default function Home() {
+  const router = useRouter()
+
   const { data: orgsLocations } = useQuery({
     queryKey: ['org-locations'],
     queryFn: getOrgsLocations
   })
 
   const [selectedState, setSelectedState] = React.useState<string>(orgsLocations?.[0].name ?? 'SP');
-  
   const cities = orgsLocations?.filter((state) => state.name === selectedState)
-    .flatMap((state) => state.cities.map((city) => city)) ?? []
-
+  .flatMap((state) => state.cities.map((city) => city)) ?? []
+  
   const { register, handleSubmit, setValue } = useForm<SearchPetsByRegionSchema>({ 
     resolver: zodResolver(searchPetsByRegionSchema),
     defaultValues: {
@@ -39,13 +42,22 @@ export default function Home() {
     }
   })  
 
-  const router = useRouter()
-
-  function searchPetsByRegion(data: SearchPetsByRegionSchema) {
+  async function searchPetsByRegion(data: SearchPetsByRegionSchema) {
     const { state, city } = data 
-    router.push(`/pets?state=${state}&city=${city}`)
-  }
 
+    const params = new URLSearchParams()
+
+    Object.entries(data).forEach(([key, value]) => {
+      params.set(key, encodeURIComponent(value));
+    });
+    
+    router.push('/pets'+ '?' + params)
+
+    await queryClient.prefetchQuery({
+      queryKey: [`pets-${state}-${city}`],
+      queryFn: () => getPets({ state, city }),
+    })
+  }
 
   return (
     <main className="w-full h-screen p-36 flex flex-col bg-coral-500 text-white">

@@ -9,7 +9,7 @@ import { getOrgsLocations } from "@/services/orgs";
 import { getPets } from "@/services/pets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -27,9 +27,19 @@ export default function Pets() {
  /*  const params = useParams<{ state: string; city: string }>()
   const { state, city } = params */
   const searchParams = useSearchParams()
+  const pathname = usePathname() 
   const state = searchParams.get('state')
   const city = searchParams.get('city')
 
+  const createQueryString = React.useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
 
   const { data: orgsLocations } = useQuery({
     queryKey: ['org-locations'],
@@ -37,7 +47,7 @@ export default function Pets() {
   })
 
   const { data: pets } = useQuery({
-    queryKey: ['pets-'],
+    queryKey: [`pets-${state}-${city}`],
     queryFn: () => getPets({ city, state})
   })
 
@@ -65,7 +75,10 @@ export default function Pets() {
               defaultValue={selectedState}
               variant="outlined-light"
               size="xs"
-              onValueChange={(e) => setSelectedState(e)}
+              onChangeValue={(value) => {
+                setValue("state", value);
+                setSelectedState(value);
+              }}
             >
               {orgsLocations && orgsLocations.map((state, index) => (
                 <SelectItem key={index} value={state.name}>
@@ -79,6 +92,9 @@ export default function Pets() {
               variant="outlined-light"
               justifyTrigger="between"
               size="sm"
+              onChangeValue={(value) => {
+                setValue("city", value);
+              }}
             >
               {cities.map((city, index) => (
                 <SelectItem key={index} value={city.name}>
