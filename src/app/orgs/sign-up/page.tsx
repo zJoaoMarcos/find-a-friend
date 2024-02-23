@@ -1,45 +1,65 @@
-import { Friends } from "@/components/Friends";
-import { LogoWithText } from "@/components/Logo/LogoWithText";
+import { Input } from "@/components/Input";
+import Link from "next/link";
 
-export default function SignUp() { 
+export default function SignUp() {
   return (
-    <main className="w-full h-screen flex flex-row justify-evenly items-center">
-      <section className="w-[488px] h-[661px] flex flex-col items-center justify-between pt-28 pb-9 rounded-3xl bg-coral-500">
-        <LogoWithText />
+    <section className="w-[488px] h-[661px] flex flex-col items-start justify-between pt-20 mb text-navy-900">
+      <h2 className="text-5xl font-bold">Cadastre sua organização</h2>
 
-        <Friends width="384" />
-      </section>
+      <div className="w-full flex flex-col gap-4 mt-24">
+        <Input
+          name="completeName"
+          label="Nome do responsável"
+          type="text"
+          placeholder="Nome completo"
+        />
+        <Input
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="name@email.com"
+        />
+        <Input
+          name="cep"
+          label="CEP"
+          type="text"
+          placeholder="000.000.000-00"
+        />
+        <Input
+          name="address"
+          label="Endereço"
+          type="text"
+          placeholder="Rua do meio, 20"
+        />
+        <Input
+          name="number"
+          label="Whatsapp"
+          type="text"
+          placeholder="55 94002-8922"
+        />
+        <Input
+          name="password"
+          label="Senha"
+          type="password"
+          placeholder="****************"
+        />
+        <Input
+          name="password"
+          label="Confirmar Senha"
+          type="passwordConfirmation"
+          placeholder="****************"
+        />
 
-      <section className="w-[488px] h-[661px] flex flex-col items-start justify-between pt-20 text-navy-900">
-        
-        <div className="w-full flex flex-col gap-4">
-        {/*   <div className="flex flex-col items-start w-full">
-            <label htmlFor="" className="pl-0.5 mb-2 text-base font-semibold">Email</label>
-            <input
-              type="text"
-              className="w-full h-16 py-1 px-4 ring-2 bg-navy-900/10 ring-navy-900/20 outline-none rounded-2xl font-semibold text-navy-900/90"
-              placeholder="****************"
-            />
-          </div>
-          <div className="flex flex-col items-start w-full">
-            <label htmlFor="" className="pl-0.5 mb-2 text-base font-semibold">Senha</label>
-            <input
-              type="text"
-              className="w-full h-16 py-1 px-4 ring-2 bg-navy-900/10 ring-navy-900/20 outline-none rounded-2xl font-semibold text-navy-900/90"
-              placeholder="nome@email.com"
-            />
-          </div>
+        <div className="w-full gap-5 flex flex-col justify-center mt-16">
+          <button className="h-16 bg-navy-900 rounded-2xl font-extrabold text-white">
+            Login
+          </button>
 
-          <div className="w-full gap-5 flex flex-col mt-16">
-            <button className="h-16 bg-navy-900 rounded-2xl font-extrabold text-white">
-              Login
-            </button>
-            <button className="h-16 bg-navy-900/10 rounded-2xl font-extrabold text-navy-900">
-              Cadastra minha organização
-            </button>
-          </div> */}
+          <Link href='/orgs/sign-in' className="font-extrabold text-navy-900 text-center underline">
+            Já possui conta?
+          </Link>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 } 
