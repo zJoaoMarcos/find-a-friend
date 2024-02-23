@@ -17,29 +17,22 @@ import { z } from "zod";
 
 const searchPetsByRegionSchema = z.object({
   state: z.string(),
-  city: z.string()
+  city: z.string(),
 })
 
 type SearchPetsByRegionSchema = z.infer<typeof searchPetsByRegionSchema>
 
+const decodeParam = (param: string | null) => {
+  if (param === null) return null
+  return decodeURIComponent(param)
+}
 
 export default function Pets() {
- /*  const params = useParams<{ state: string; city: string }>()
-  const { state, city } = params */
+  const router = useRouter()
   const searchParams = useSearchParams()
   const pathname = usePathname() 
-  const state = searchParams.get('state')
-  const city = searchParams.get('city')
-
-  const createQueryString = React.useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
+  const state = decodeParam(searchParams.get('state'))
+  const city = decodeParam(searchParams.get('city'))
 
   const { data: orgsLocations } = useQuery({
     queryKey: ['org-locations'],
@@ -48,20 +41,31 @@ export default function Pets() {
 
   const { data: pets } = useQuery({
     queryKey: [`pets-${state}-${city}`],
-    queryFn: () => getPets({ city, state})
+    queryFn: () => getPets({ city, state }),
   })
 
-  const [selectedState, setSelectedState] = React.useState<string>(orgsLocations?.[0].name ?? 'SP');
+  const { register, handleSubmit, setValue, resetField, watch } = useForm<SearchPetsByRegionSchema>({ 
+    resolver: zodResolver(searchPetsByRegionSchema),
+    defaultValues: {
+      state: state ?? undefined,
+      city: city ?? undefined,
+    }
+  }) 
+  
+  const { state: selectedState, city: selectedCity} = watch()
+  
   
   const cities = orgsLocations?.filter((state) => state.name === selectedState)
     .flatMap((state) => state.cities.map((city) => city)) ?? []
+  
+  function searchPetsByRegion(data: SearchPetsByRegionSchema) {
+    const params = new URLSearchParams()
+    Object.entries(data).forEach(([key, value]) => {
+      params.set(key, encodeURIComponent(value!));
+    });
 
-    const { register, handleSubmit, setValue } = useForm<SearchPetsByRegionSchema>({ 
-      resolver: zodResolver(searchPetsByRegionSchema),
-      defaultValues: {
-        state: selectedState
-      }
-    })  
+    router.push(pathname + '?' + params)
+  }
 
   return (
     <main className="w-full h-screen flex flex-row bg-gray-50">
@@ -71,13 +75,14 @@ export default function Pets() {
 
           <div className="flex flex-row items-center justify-between gap-4 mt-6">
             <Select
+              {...register('state')}
               placeholder="Estado"
-              defaultValue={selectedState}
+              value={selectedState}
               variant="outlined-light"
               size="xs"
               onChangeValue={(value) => {
                 setValue("state", value);
-                setSelectedState(value);
+              
               }}
             >
               {orgsLocations && orgsLocations.map((state, index) => (
@@ -88,10 +93,12 @@ export default function Pets() {
             </Select>
 
             <Select
+              {...register('city')}
               placeholder="Selecione uma Cidade"
               variant="outlined-light"
               justifyTrigger="between"
               size="sm"
+              value={selectedCity}
               onChangeValue={(value) => {
                 setValue("city", value);
               }}
@@ -103,7 +110,7 @@ export default function Pets() {
               ))}
             </Select>
 
-            <Button Icon={<SearchIcon />}  classValue="h-14 w-14" />
+            <Button onClick={handleSubmit(searchPetsByRegion)} Icon={<SearchIcon />}  classValue="h-14 w-14" />
           </div>
         </header>
 
