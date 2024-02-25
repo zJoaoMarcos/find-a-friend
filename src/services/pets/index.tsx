@@ -12,7 +12,7 @@ export async function getPets(params: GetPetsParams) {
     await new Promise(resolve => setTimeout(resolve, 1000))
 
     console.log(params)
-
+      
     return [
       { id: 1, name: "Alfredo", photo: "alfredo.png" },
       { id: 2, name: "Francis", photo: "francis.png" },
