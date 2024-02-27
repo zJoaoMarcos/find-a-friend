@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
-import "../../globals.css";
+import "../globals.css";
 import { TanstackQuery } from "@/providers/queryClientProvider";
 import { SideBar } from "@/components/SideBar";
 
