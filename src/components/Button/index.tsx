@@ -3,7 +3,7 @@ import { ClassValue, VariantProps, tv } from "tailwind-variants";
 
 const buttonTv = tv({
   slots: {
-    button: "flex justify-center items-center rounded-2xl",
+    button: "flex justify-center items-center ",
     icon: '',
   },
   variants: {
@@ -11,8 +11,8 @@ const buttonTv = tv({
       'mustard': { button:"bg-mustard-400 hover:bg-mustard-400/90"}
     },
     size: {
-      xs: { button: 'py-1 px-3 text-xs'},
-      sm: { button: 'py-1.5 px-4 text-sm'}
+      xs: { button: 'py-3 px-3 rounded-2xl text-xs'},
+      sm: { button: 'py-1.5 px-4 rounded-2xl text-sm'}
     }
   },
   defaultVariants: {
