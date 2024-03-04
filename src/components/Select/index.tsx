@@ -3,7 +3,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import React from "react";
-import { VariantProps, tv } from "tailwind-variants";
+import { ClassValue, VariantProps, tv } from "tailwind-variants";
 
 const select = tv({
   slots: {
@@ -38,6 +38,11 @@ const select = tv({
         trigger: "bg-coral-300",
         content: "bg-coral-300 text-white",
       },
+      "outlined-blue-light": {
+        root: "text-navy-900",
+        trigger: "bg-navy-900/10 ring-2 ring-navy-900/20",
+        content: "bg-navy-900/40 text-navy-900"
+      }
     },
     size: {
       xs: { trigger: "w-16 h-16 gap-2 p-1.5", content: "gap-2 p-1.5" },
@@ -53,6 +58,10 @@ const select = tv({
         trigger: "w-96 h-16 gap-2 p-2",
         content: "w-96 p-2",
       },
+      full: {
+        trigger: "w-full h-16 gap-2 p-2",
+        content: "w-[540px] p-2",
+      }
     },
     flex: {
       col: { root: "flex-col items-start gap-3.5" },
