@@ -26,13 +26,13 @@ type SearchPetsByRegionSchema = z.infer<typeof searchPetsByRegionSchema>
 export default function Home() {
   const router = useRouter()
 
-  const { data: orgsLocations } = useQuery({
+  const { data } = useQuery({
     queryKey: ['org-locations'],
     queryFn: getOrgsLocations
   })
 
-  const [selectedState, setSelectedState] = React.useState<string>(orgsLocations?.[0].name ?? 'SP');
-  const cities = orgsLocations?.filter((state) => state.name === selectedState)
+  const [selectedState, setSelectedState] = React.useState<string>(data?.locations?.[0]?.name ?? 'SP');
+  const cities = data?.locations?.filter((state) => state.name === selectedState)
   .flatMap((state) => state.cities.map((city) => city)) ?? []
   
   const { register, handleSubmit, setValue } = useForm<SearchPetsByRegionSchema>({ 
@@ -90,8 +90,8 @@ export default function Home() {
               setSelectedState(value);
             }}
           >
-            {orgsLocations &&
-              orgsLocations.map((state, index) => (
+            {data &&
+              data.locations.map((state, index) => (
                 <SelectItem key={index} value={state.name}>
                   {state.name}
                 </SelectItem>
