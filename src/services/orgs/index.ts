@@ -11,7 +11,6 @@ export async function getOrgsLocations() {
 
     const { data } = response
 
-
     return data
   } catch (error) {
     console.log(error)
