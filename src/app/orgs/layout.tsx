@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "../globals.css";
-import { TanstackQuery } from "@/providers/queryClientProvider";
 import { LogoWithText } from "@/components/Logo/LogoWithText";
 import { Friends } from "@/components/Friends";
 
@@ -20,7 +19,6 @@ export default function OrgLayout({
   return (
     <html lang="pt-BR">
       <body className={nunito.className}>
-        <TanstackQuery>
           <main className="w-full h-screen flex flex-row justify-evenly items-center">
             <section className="w-[488px] h-[661px] flex flex-col items-center justify-between pt-28 pb-9 rounded-3xl bg-coral-500">
               <LogoWithText />
@@ -30,7 +28,6 @@ export default function OrgLayout({
 
             {children}
           </main>
-        </TanstackQuery>
       </body>
     </html>
   );

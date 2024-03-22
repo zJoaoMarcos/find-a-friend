@@ -1,6 +1,6 @@
 import { api } from "../api"
 
-import { GET_PETS } from "../routes"
+import { GET_PETS } from "@/@constants/requests-url"
 
 interface GetPetsParams { 
   state: string | null

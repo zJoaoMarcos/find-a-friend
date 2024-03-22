@@ -55,7 +55,7 @@ export default function Pets() {
   const { state: selectedState, city: selectedCity} = watch()
   
   
-  const cities = orgsLocations?.filter((state) => state.name === selectedState)
+  const cities = orgsLocations?.locations?.filter((state) => state.name === selectedState)
     .flatMap((state) => state.cities.map((city) => city)) ?? []
   
   function searchPetsByRegion(data: SearchPetsByRegionSchema) {
@@ -85,7 +85,7 @@ export default function Pets() {
               
               }}
             >
-              {orgsLocations && orgsLocations.map((state, index) => (
+              {orgsLocations && orgsLocations.locations.map((state, index) => (
                 <SelectItem key={index} value={state.name}>
                   {state.name}
                 </SelectItem>

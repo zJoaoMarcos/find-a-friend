@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
-import { TanstackQuery } from "@/providers/queryClientProvider";
+
+import { Providers } from "@/providers";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={nunito.className}>
-        <TanstackQuery>{children}</TanstackQuery>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
