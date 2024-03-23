@@ -40,19 +40,16 @@ api.interceptors.response.use(
     if (isAxiosError(error)) {
       const status = error.response?.status;
       const message = error.response?.data.message;
-      console.log({status, message, error})
+
       if (status === 401 && message === "Token expired.") {
         const originalConfig = error.config;
 
         if (!isRefreshing) {
           isRefreshing = true;
 
-          delete api.defaults.headers.common['Authorization']
-
           api
             .patch(REFRESH_TOKEN)
             .then((response) => {
-              console.log(response)
               const { accessToken } = response.data;
 
               setCookie(undefined, cookieValues.accessToken, accessToken, {

@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useEffect } from "react";
 
 import { Organization } from "@/@types/Organzation";
-import { signIn } from "@/services/orgs";
+import { getOrganizationProfile, signIn } from "@/services/orgs";
 import { destroyCookie, parseCookies, setCookie } from 'nookies'
 import { cookieValues } from "@/@constants/cookie-values";
 import { useRouter } from "next/navigation";
-import { ORG_PROFILE } from "@/@constants/requests-url";
 import { api } from "@/services/api";
+import { toast } from "sonner";
+import { APP_ROUTES } from "@/@constants/app-routes";
 
 interface AuthContextData {
   organization: Organization | null;
@@ -20,7 +21,11 @@ const AuthContext = createContext({} as AuthContextData);
 export const logout = () => {
   // clean cookies and local/session storage
   // redirect to signIn page
-  /* destroyCookie(undefined, cookieValues.accessToken) */
+
+  destroyCookie(undefined, cookieValues.accessToken)
+  destroyCookie(undefined, cookieValues.refreshToken)
+
+  window.location.replace('/orgs/sign-in')
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -43,11 +48,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       setOrganization(organization);
       
-      router.push(ORG_PROFILE)
-    } catch (error) {
+      toast.success('Login realizado com sucesso', { 
+        position: 'top-right'
+      })
+      
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
+      router.push(APP_ROUTES.private.profile)
+
+    } catch (error: any) {
+      toast.error(error?.message, {
+        position: 'top-right'
+      })
     }
   };
+
+  useEffect(() => {
+    const { [cookieValues.accessToken]: accessToken } = parseCookies();
+
+    if (!isAuthenticated && accessToken) { 
+      getOrganizationProfile().then(res => setOrganization(res.organization))
+    }
+  }, [isAuthenticated])
 
   return (
     <AuthContext.Provider

@@ -9,6 +9,7 @@ import { z } from "zod";
 import { Input } from "@/components/Input";
 import { useAuth } from "@/contexts/auth";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { APP_ROUTES } from "@/@constants/app-routes";
 
 const signInSchema = z.object({ 
@@ -23,20 +24,21 @@ export default function SignIn() {
     resolver: zodResolver(signInSchema)
   })
 
-  const { login } = useAuth()
+  const { login, isAuthenticated } = useAuth()
   const router = useRouter()
 
-  async function handleSignIn(data: SignInFormData) {
-    event?.preventDefault()
-    
+  async function handleSignIn(data: SignInFormData, ) {
     const { email, password } = data
 
-    await login(email, password).then(res => {
-      router.push(APP_ROUTES.private.profile)
-    }).catch(err => {
-      console.log(err)
-    })
+    await login(email, password)
   }
+
+  useEffect(() => {
+    console.log(isAuthenticated)
+    if (isAuthenticated) { 
+      router.push(APP_ROUTES.private.profile)
+    }
+  } , [router, isAuthenticated])
 
   return (
     <section className="w-[488px] h-[661px] flex flex-col items-start justify-between pt-20 text-navy-900">

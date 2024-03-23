@@ -8,13 +8,12 @@ interface SignInResponse {
 }
 
 export async function signIn(email: string, password: string) { 
+
   try { 
     const response = await api.post<SignInResponse>(SIGN_IN, { 
       email,
       password
     }) 
-
-    console.log(response.headers)
 
     const { data } = response
      
