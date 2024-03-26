@@ -53,6 +53,7 @@ api.interceptors.response.use(
               const { accessToken } = response.data;
 
               setCookie(undefined, cookieValues.accessToken, accessToken, {
+                path: '/',
                 maxAge: 60 * 60 * 1 * 24, // 24 hours
               });
 

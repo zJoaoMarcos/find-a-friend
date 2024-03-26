@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { organization, accessToken } = await signIn(email, password);
 
       setCookie(undefined, cookieValues.accessToken, accessToken, {
+        path: '/',
         maxAge: 60 * 60 * 1 * 24, // 24 hours
       })
 

@@ -1,3 +1,5 @@
+"use client"
+
 import { checkIsPublicRoute } from "@/@utils/check-is-public-route";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { usePathname } from "next/navigation";

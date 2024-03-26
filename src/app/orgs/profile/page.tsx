@@ -1,19 +1,16 @@
 "use client";
 
-import { Organization } from "@/@types/Organzation";
-import { getOrganizationProfile } from "@/services/orgs";
+import { useAuth } from "@/contexts/auth";
 import React from "react";
 
 export default function Profile() {
-  const [profile, setProfile] = React.useState<Organization>();
+  const { organization } = useAuth();
 
-  React.useEffect(() => {
-    (async () => {
-      const res = await getOrganizationProfile();
+  return (
+    <div className="w-screen h-screen flex flex-col items-center">
+      <h2>{organization?.name}</h2>
 
-      setProfile(res.organization);
-    })();
-  }, []);
-
-  return <h2 className="text-4xl text-black">{profile?.name}</h2>;
+      <div>{organization?.city}</div>
+    </div>
+  );
 }
