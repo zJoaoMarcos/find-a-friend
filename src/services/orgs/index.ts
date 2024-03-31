@@ -1,6 +1,7 @@
 import { Organization } from "@/@types/Organzation";
 import { api } from "../api";
 import { GET_ORGS_LOCATIONS, ORG_PROFILE, SIGN_IN } from "@/@constants/requests-url";
+import { AxiosError, isAxiosError } from "axios";
 
 interface SignInResponse { 
   organization: Organization;
@@ -8,7 +9,6 @@ interface SignInResponse {
 }
 
 export async function signIn(email: string, password: string) { 
-
   try { 
     const response = await api.post<SignInResponse>(SIGN_IN, { 
       email,
@@ -19,7 +19,14 @@ export async function signIn(email: string, password: string) {
      
     return data
   } catch (error) { 
-    throw 'Falha tente novamente'
+    if (isAxiosError(error)) { 
+      const message = error.response?.data.message
+
+      if (message === "Invalid credentials error.") {
+        throw new Error('E-mail ou senha inválidos.')
+      }
+    }
+    throw new Error('Falha tente novamente.');
   }
 }
 
@@ -35,6 +42,7 @@ export async function getOrganizationProfile() {
 
     return data
   } catch (error) {
+    console.log(error)
     throw 'Falha tente novamente'
   }
 }

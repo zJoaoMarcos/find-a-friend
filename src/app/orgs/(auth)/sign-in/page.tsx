@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Input } from "@/components/Input";
@@ -27,14 +27,14 @@ export default function SignIn() {
   const { login, isAuthenticated } = useAuth()
   const router = useRouter()
 
-  async function handleSignIn(data: SignInFormData, ) {
+  const handleSignIn: SubmitHandler<SignInFormData> = async (data, event) => {
     const { email, password } = data
 
     await login(email, password)
   }
 
+
   useEffect(() => {
-    console.log(isAuthenticated)
     if (isAuthenticated) { 
       router.push(APP_ROUTES.private.profile)
     }
@@ -61,7 +61,7 @@ export default function SignIn() {
         />
 
         <div className="w-full gap-5 flex flex-col mt-16">
-          <button className="h-16 bg-navy-900 rounded-2xl font-extrabold text-white">
+          <button type="submit" className="h-16 bg-navy-900 rounded-2xl font-extrabold text-white">
             {isSubmitting ? 'Carregando...' : 'Entrar'}
           </button>
 

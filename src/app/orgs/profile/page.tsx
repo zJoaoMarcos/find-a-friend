@@ -1,16 +1,29 @@
-"use client";
+"use client"
 
-import { useAuth } from "@/contexts/auth";
+import { Organization } from "@/@types/Organzation";
+import { UpdateProfileForm } from "@/components/Forms/Organization/UpdateProfileForm";
+import { getOrganizationProfile } from "@/services/orgs";
 import React from "react";
 
 export default function Profile() {
-  const { organization } = useAuth();
+  // turn component to server component with request sendding access token
+  const [organization, setOrganization]  = React.useState<Organization>()
+  
+  React.useEffect(()  => {
+    (async () => {
+      const res = await getOrganizationProfile()
+      setOrganization(res.organization)
+    })()
+  } ,[])
+
+
+  if (!organization) { 
+    return <p>Carregando...</p>
+  }
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center">
-      <h2>{organization?.name}</h2>
-
-      <div>{organization?.city}</div>
-    </div>
+    <main className="w-screen h-full flex flex-col items-center pt-10 bg-[#FDECED]">
+      <UpdateProfileForm organization={organization}  />
+    </main>
   );
 }

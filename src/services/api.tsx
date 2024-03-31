@@ -88,9 +88,12 @@ api.interceptors.response.use(
             }
           })
         })
-      } else {
+      } else if (status === 401) {
         logout()
+      } else {
+        return Promise.reject(error)
       }
+
     }
 
     return Promise.reject(error);

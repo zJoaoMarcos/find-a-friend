@@ -1,3 +1,5 @@
+"use client"
+
 import React, { createContext, useContext, useEffect } from "react";
 
 import { Organization } from "@/@types/Organzation";
@@ -22,10 +24,14 @@ export const logout = () => {
   // clean cookies and local/session storage
   // redirect to signIn page
 
-  destroyCookie(undefined, cookieValues.accessToken)
-  destroyCookie(undefined, cookieValues.refreshToken)
+    destroyCookie(undefined, cookieValues.accessToken, {
+      path: '/'
+    })
+    destroyCookie(undefined, cookieValues.refreshToken, {
+      path: '/'
+    })
 
-  window.location.replace('/orgs/sign-in')
+    window.location.replace('/orgs/sign-in')
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -41,8 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { organization, accessToken } = await signIn(email, password);
 
       setCookie(undefined, cookieValues.accessToken, accessToken, {
-        path: '/',
         maxAge: 60 * 60 * 1 * 24, // 24 hours
+        path: '/',
       })
 
       api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
@@ -59,7 +65,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     } catch (error: any) {
       toast.error(error?.message, {
-        position: 'top-right'
+        position: 'top-right',
+        duration: 2000
       })
     }
   };
@@ -67,7 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const { [cookieValues.accessToken]: accessToken } = parseCookies();
 
-    if (!isAuthenticated && accessToken) { 
+    if (accessToken) { 
       getOrganizationProfile().then(res => setOrganization(res.organization))
     }
   }, [isAuthenticated])
