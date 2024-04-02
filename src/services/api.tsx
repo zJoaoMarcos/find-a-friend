@@ -5,6 +5,8 @@ import { cookieValues } from "@/@constants/cookie-values";
 import { REFRESH_TOKEN } from "@/@constants/requests-url";
 import { logout } from "@/contexts/auth";
 
+const isServer = typeof window === "undefined";
+
 export const api = axios.create({
   baseURL: "http://localhost:3333/",
   headers: {
@@ -13,26 +15,34 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use((request) => { 
+api.interceptors.request.use(async (config) => {
+  const headers = config.headers ?? {};
 
-  const headers = request.headers ?? {}
+  if (isServer) {
+    const { cookies } = await import("next/headers"),
+    accessToken = cookies().get(cookieValues.accessToken)?.value;
 
-  const { [cookieValues.accessToken]: accessToken } = parseCookies();
+    if (accessToken) {
+      headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+  } else {
+    const { [cookieValues.accessToken]: accessToken } = parseCookies();
 
-  if (accessToken) {
-    headers['Authorization'] = `Bearer ${accessToken}`
+    if (accessToken) {
+      headers["Authorization"] = `Bearer ${accessToken}`;
+    }
   }
 
-  return request
-})
+  return config;
+});
 
 type FailedRequestQueue = {
-  onSuccess: (newToken: string) => void
-  onFailure: () => void
-}
+  onSuccess: (newToken: string) => void;
+  onFailure: () => void;
+};
 
 let isRefreshing = false;
-let failedRequestsQueue: FailedRequestQueue[] = []
+let failedRequestsQueue: FailedRequestQueue[] = [];
 
 api.interceptors.response.use(
   (response) => response,
@@ -53,10 +63,9 @@ api.interceptors.response.use(
               const { accessToken } = response.data;
 
               setCookie(undefined, cookieValues.accessToken, accessToken, {
-                path: '/',
+                path: "/",
                 maxAge: 60 * 60 * 1 * 24, // 24 hours
               });
-
 
               failedRequestsQueue.forEach((request) =>
                 request.onSuccess(accessToken)
@@ -65,35 +74,36 @@ api.interceptors.response.use(
             .catch((err) => {
               failedRequestsQueue.forEach((request) => request.onFailure());
 
-              logout()
+              logout();
             })
             .finally(() => {
               failedRequestsQueue = [];
 
-              isRefreshing = false
-            })
+              isRefreshing = false;
+            });
         }
 
         return new Promise((resolve, reject) => {
           failedRequestsQueue.push({
             onSuccess: (accessToken: string) => {
               if (originalConfig) {
-                originalConfig.headers["Authorization"] = `Bearer ${accessToken}`;
+                originalConfig.headers[
+                  "Authorization"
+                ] = `Bearer ${accessToken}`;
 
-                resolve(api(originalConfig))
+                resolve(api(originalConfig));
               }
             },
             onFailure: () => {
-              reject(error)
-            }
-          })
-        })
+              reject(error);
+            },
+          });
+        });
       } else if (status === 401) {
-        logout()
+        logout();
       } else {
-        return Promise.reject(error)
+        return Promise.reject(error);
       }
-
     }
 
     return Promise.reject(error);
