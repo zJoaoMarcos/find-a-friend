@@ -1,7 +1,7 @@
 export const APP_ROUTES = { 
   private: {
     profile: '/orgs/profile',
-    register_pet: '/pet/register',
+    register_pet: '/orgs/register',
   },
   public: {
     home: '/',

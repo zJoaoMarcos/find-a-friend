@@ -1,6 +1,6 @@
 import { SideBar } from "@/components/SideBar";
 
-export default function PetLayout({
+export default function OrgLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

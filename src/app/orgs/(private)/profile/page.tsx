@@ -17,10 +17,8 @@ export default async function Profile() {
 
         <div className="flex flex-col">
           <p className="text-3xl font-bold">{organization?.name}</p>
-          <p className="text-base font-medium">
-            {`${organization?.address} - ${organization?.address_number}, ${organization?.zip_code} `}
-          </p>
-          <p>{`${organization?.city} - ${organization?.state}`}</p>
+          <p className="text-sm font-medium">
+            {`${organization?.address} - ${organization?.address_number}, CEP:${organization?.zip_code}, ${organization?.city} - ${organization?.state}`}</p>
         </div>
       </div>
 
