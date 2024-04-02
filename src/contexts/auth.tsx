@@ -59,8 +59,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         position: 'top-right'
       })
       
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
       router.push(APP_ROUTES.private.profile)
 
     } catch (error: any) {
